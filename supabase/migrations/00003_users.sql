@@ -18,13 +18,16 @@ CREATE INDEX idx_users_role ON users (organization_id, role);
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.users (id, organization_id, role, full_name)
-  VALUES (
-    NEW.id,
-    COALESCE((NEW.raw_user_meta_data->>'organization_id')::uuid, NULL),
-    COALESCE((NEW.raw_user_meta_data->>'role')::user_role, 'viewer'),
-    COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.email)
-  );
+  -- Only create profile if organization_id is provided
+  IF NEW.raw_user_meta_data->>'organization_id' IS NOT NULL THEN
+    INSERT INTO public.users (id, organization_id, role, full_name)
+    VALUES (
+      NEW.id,
+      (NEW.raw_user_meta_data->>'organization_id')::uuid,
+      COALESCE((NEW.raw_user_meta_data->>'role')::user_role, 'viewer'),
+      COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.email)
+    );
+  END IF;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

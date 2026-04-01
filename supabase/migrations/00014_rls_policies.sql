@@ -22,9 +22,9 @@ $$ LANGUAGE sql SECURITY DEFINER STABLE;
 -- ── ORGANIZATIONS ────────────────────────────────────────────
 ALTER TABLE organizations ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view own organization"
+CREATE POLICY "Anyone can view organizations"
   ON organizations FOR SELECT
-  USING (id = user_org_id() OR is_operator());
+  USING (true);
 
 CREATE POLICY "Admins can update own organization"
   ON organizations FOR UPDATE

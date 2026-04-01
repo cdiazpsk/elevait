@@ -85,3 +85,60 @@ INSERT INTO alerts (id, elevator_id, alert_type, severity, title, message, statu
   ('20000000-0000-0000-0000-000000000002', 'e0000000-0000-0000-0000-000000000001', 'door_failure_imminent', 'warning',
     'Car A - Door Wear Detected', 'Metro Tower One Car A door cycle count approaching threshold. Current: 485,000 cycles. Threshold: 500,000. Schedule preventive door service.',
     'acknowledged', '{"door_cycles": 485000, "threshold": 500000, "door_motor_current_trend": "stable"}');
+
+-- ══════════════════════════════════════════════════════════════
+-- Sample Invoices
+-- ══════════════════════════════════════════════════════════════
+
+INSERT INTO invoices (id, contract_id, vendor_org_id, invoice_number, period_start, period_end, total_amount, audit_status, submitted_at) VALUES
+  ('30000000-0000-0000-0000-000000000001', 'f0000000-0000-0000-0000-000000000001', 'b0000000-0000-0000-0000-000000000001',
+    'INV-2026-0001', '2026-01-01', '2026-01-31', 9750.00, 'approved', '2026-02-05T10:00:00Z'),
+  ('30000000-0000-0000-0000-000000000002', 'f0000000-0000-0000-0000-000000000001', 'b0000000-0000-0000-0000-000000000001',
+    'INV-2026-0002', '2026-02-01', '2026-02-28', 11200.00, 'flagged', '2026-03-04T09:30:00Z'),
+  ('30000000-0000-0000-0000-000000000003', 'f0000000-0000-0000-0000-000000000002', 'b0000000-0000-0000-0000-000000000001',
+    'INV-2026-0003', '2026-02-01', '2026-02-28', 6800.50, 'pending', '2026-03-05T14:00:00Z'),
+  ('30000000-0000-0000-0000-000000000004', 'f0000000-0000-0000-0000-000000000003', 'b0000000-0000-0000-0000-000000000001',
+    'INV-2026-0004', '2026-03-01', '2026-03-31', 3950.00, 'pending', '2026-04-01T08:00:00Z');
+
+-- ══════════════════════════════════════════════════════════════
+-- Sample Invoice Line Items
+-- ══════════════════════════════════════════════════════════════
+
+INSERT INTO invoice_line_items (id, invoice_id, service_event_id, category, description, quantity, unit_rate, amount, audit_result) VALUES
+  -- Invoice 1 line items (approved)
+  ('40000000-0000-0000-0000-000000000001', '30000000-0000-0000-0000-000000000001', NULL,
+    'pm_hours', 'Full maintenance - January 2026', 1, 8500.00, 8500.00, 'valid'),
+  ('40000000-0000-0000-0000-000000000002', '30000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000002',
+    'labor_regular', 'PM visit - Car A, 2 technicians x 4 hrs', 8, 85.00, 680.00, 'valid'),
+  ('40000000-0000-0000-0000-000000000003', '30000000-0000-0000-0000-000000000001', NULL,
+    'travel_time', 'Travel for PM visit', 2, 85.00, 170.00, 'valid'),
+  ('40000000-0000-0000-0000-000000000004', '30000000-0000-0000-0000-000000000001', NULL,
+    'parts', 'Door rollers replacement - Car C', 4, 100.00, 400.00, 'valid'),
+
+  -- Invoice 2 line items (flagged - has overtime and excess travel)
+  ('40000000-0000-0000-0000-000000000005', '30000000-0000-0000-0000-000000000002', NULL,
+    'pm_hours', 'Full maintenance - February 2026', 1, 8500.00, 8500.00, 'valid'),
+  ('40000000-0000-0000-0000-000000000006', '30000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-000000000003',
+    'labor_regular', 'Callback - Door adjustment, Elevator 1', 3, 85.00, 255.00, 'valid'),
+  ('40000000-0000-0000-0000-000000000007', '30000000-0000-0000-0000-000000000002', NULL,
+    'labor_overtime', 'After-hours emergency call - Car B', 4, 125.00, 500.00, 'flagged'),
+  ('40000000-0000-0000-0000-000000000008', '30000000-0000-0000-0000-000000000002', NULL,
+    'travel_time', 'Travel charges - 3 visits', 6, 85.00, 510.00, 'flagged'),
+  ('40000000-0000-0000-0000-000000000009', '30000000-0000-0000-0000-000000000002', NULL,
+    'out_of_contract', 'Emergency door sensor replacement', 1, 1435.00, 1435.00, 'overcharge'),
+
+  -- Invoice 3 line items (pending review)
+  ('40000000-0000-0000-0000-000000000010', '30000000-0000-0000-0000-000000000003', NULL,
+    'pm_hours', 'Parts & labor - February 2026', 1, 5200.00, 5200.00, 'pending'),
+  ('40000000-0000-0000-0000-000000000011', '30000000-0000-0000-0000-000000000003', NULL,
+    'labor_regular', 'Additional service hours', 12, 75.00, 900.00, 'pending'),
+  ('40000000-0000-0000-0000-000000000012', '30000000-0000-0000-0000-000000000003', NULL,
+    'parts', 'Control board repair', 1, 700.50, 700.50, 'pending'),
+
+  -- Invoice 4 line items (pending review)
+  ('40000000-0000-0000-0000-000000000013', '30000000-0000-0000-0000-000000000004', NULL,
+    'pm_hours', 'Labor only - March 2026', 1, 2800.00, 2800.00, 'pending'),
+  ('40000000-0000-0000-0000-000000000014', '30000000-0000-0000-0000-000000000004', '10000000-0000-0000-0000-000000000004',
+    'labor_regular', 'Service elevator inspection prep', 6, 70.00, 420.00, 'pending'),
+  ('40000000-0000-0000-0000-000000000015', '30000000-0000-0000-0000-000000000004', NULL,
+    'parts', 'Guide shoe replacement', 2, 365.00, 730.00, 'pending');
