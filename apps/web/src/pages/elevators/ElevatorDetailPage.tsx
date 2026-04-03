@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import PageHeader from "../../components/ui/PageHeader";
 import DataTable from "../../components/ui/DataTable";
 import StatusBadge from "../../components/ui/StatusBadge";
@@ -68,6 +68,16 @@ export default function ElevatorDetailPage() {
       <div className="flex items-center gap-3 mb-6">
         <StatusBadge status={elevator.status} />
         {elevator.iot_device_id && <code className="text-xs bg-gray-100 px-2 py-1 rounded">{elevator.iot_device_id}</code>}
+        <div className="ml-auto flex gap-2">
+          <Link to={`/events/new?elevator_id=${id}`}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            Report Service Call
+          </Link>
+          <Link to={`/elevators/${id}/edit`}
+            className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
+            Edit
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-8">

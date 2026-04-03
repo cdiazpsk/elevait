@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import PageHeader from "../../components/ui/PageHeader";
 
@@ -11,10 +11,11 @@ interface ElevatorOption {
 
 export default function EventFormPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const [elevatorId, setElevatorId] = useState("");
+  const [elevatorId, setElevatorId] = useState(searchParams.get("elevator_id") || "");
   const [eventType, setEventType] = useState("callback");
-  const [priority, setPriority] = useState("medium");
+  const [priority, setPriority] = useState("normal");
   const [description, setDescription] = useState("");
   const [elevators, setElevators] = useState<ElevatorOption[]>([]);
   const [loading, setLoading] = useState(false);
@@ -38,7 +39,7 @@ export default function EventFormPage() {
       elevator_id: elevatorId,
       event_type: eventType,
       priority,
-      status: "reported",
+      status: "open",
       description,
       reported_at: new Date().toISOString(),
     });
@@ -92,7 +93,7 @@ export default function EventFormPage() {
             <select value={priority} onChange={(e) => setPriority(e.target.value)}
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none">
               <option value="low">Low</option>
-              <option value="medium">Medium</option>
+              <option value="normal">Normal</option>
               <option value="high">High</option>
               <option value="critical">Critical</option>
             </select>

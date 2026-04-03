@@ -30,12 +30,11 @@
     "plugins": [
       "expo-router",
       "expo-location",
-      "expo-camera",
-      "expo-secure-store",
       [
-        "expo-barcode-scanner",
+        "expo-camera",
         { "cameraPermission": "ELEVaiT needs camera access to scan equipment QR codes." }
-      ]
+      ],
+      "expo-secure-store"
     ]
   }
 }
